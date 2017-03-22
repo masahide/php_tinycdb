@@ -27,9 +27,13 @@ missing
 mkinstalldirs
 modules
 run-tests.php
+*.cdb
 tests/*/*.diff
 tests/*/*.out
 tests/*/*.php
 tests/*/*.exp
 tests/*/*.log
 tests/*/*.sh
+tinycdb/cdb
+tinycdb/*.o
+tinycdb/*.a
