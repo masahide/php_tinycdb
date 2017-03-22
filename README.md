@@ -31,5 +31,13 @@ Development guide
 # test 
 
 ```
+# create cdb command
+ cd tinycdb; make; cd -
+
+# create sample.cdb
+ ./tinycdb/cdb -c -m sample.cdb sample.tsv
+ cp sample.cdb /dev/shm/sample.cdb
+
+# run test.php
  ${HOME}/php-ext/bin/php -d extension=modules/php_tinycdb.so -f test.php
 ```
