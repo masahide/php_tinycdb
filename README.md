@@ -5,7 +5,7 @@ php tinycdb extension
 Development guide
 -----------------
 
-# install dev php5.6.30
+### install dev php5.6.30
 
 ```
  mkdir ${HOME}/work ${HOME}/php-ext
@@ -19,7 +19,7 @@ Development guide
  make install
 ```
 
-# build
+### build
 
 ```
  ${HOME}/php-ext/bin/phpize
@@ -28,7 +28,7 @@ Development guide
  make
 ```
 
-# test 
+### test 
 
 ```
  ${HOME}/php-ext/bin/php -d extension=modules/php_tinycdb.so -f test.php
