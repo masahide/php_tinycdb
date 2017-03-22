@@ -7,6 +7,7 @@
 #include "php_ini.h"
 #include "ext/standard/info.h"
 #include "php_php_tinycdb.h"
+#include "tinycdb/cdb.h"
 
 /* If you declare any globals in php_php_tinycdb.h uncomment this:
 ZEND_DECLARE_MODULE_GLOBALS(php_tinycdb)
@@ -14,6 +15,7 @@ ZEND_DECLARE_MODULE_GLOBALS(php_tinycdb)
 
 /* True global resources - no need for thread safety here */
 static int le_php_tinycdb;
+static struct cdb c;
 
 /* {{{ PHP_INI
  */
@@ -52,6 +54,29 @@ PHP_FUNCTION(confirm_php_tinycdb_compiled)
    follow this convention for the convenience of others editing your code.
 */
 
+PHP_FUNCTION(get_mmap)
+{
+	char *key = NULL;
+	int key_len, len;
+	unsigned vlen, vpos;
+	char *val;
+
+
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &key, &key_len) == FAILURE) {
+		return;
+	}
+	if (cdb_find(&c, key, key_len) > 0) { /* if search successeful */
+		vpos = cdb_datapos(&c); /* position of data in a file */
+		vlen = cdb_datalen(&c); /* length of data */
+		val = emalloc(vlen+1); /* allocate memory */
+		val[vlen]=0;
+		cdb_read(&c, val, vlen, vpos); /* read the value into buffer */
+	}
+	ZVAL_STRINGL(return_value, val, vlen,0);
+	//ZVAL_STRINGL(return_value, addr, MMAP_SIZE,1);
+}
+
 
 /* {{{ php_php_tinycdb_init_globals
  */
@@ -71,6 +96,12 @@ PHP_MINIT_FUNCTION(php_tinycdb)
 	/* If you have INI entries, uncomment these lines 
 	REGISTER_INI_ENTRIES();
 	*/
+	int	fd;
+	fd = shm_open("sample.cdb", O_RDWR, 0666);
+	if (fd < 0 || cdb_init(&c, fd) != 0) {
+		return FAILURE; 
+	}
+
 	return SUCCESS;
 }
 /* }}} */
@@ -124,6 +155,7 @@ PHP_MINFO_FUNCTION(php_tinycdb)
  */
 const zend_function_entry php_tinycdb_functions[] = {
 	PHP_FE(confirm_php_tinycdb_compiled,	NULL)		/* For testing, remove later. */
+	PHP_FE(get_mmap,	NULL)		/* For testing */
 	PHP_FE_END	/* Must be the last line in php_tinycdb_functions[] */
 };
 /* }}} */
