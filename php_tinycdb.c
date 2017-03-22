@@ -3,6 +3,8 @@
 #include "config.h"
 #endif
 
+#include <fcntl.h>
+
 #include "php.h"
 #include "php_ini.h"
 #include "ext/standard/info.h"
@@ -61,8 +63,6 @@ PHP_FUNCTION(get_mmap)
 	unsigned vlen, vpos;
 	char *val;
 
-
-
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &key, &key_len) == FAILURE) {
 		return;
 	}
@@ -72,9 +72,8 @@ PHP_FUNCTION(get_mmap)
 		val = emalloc(vlen+1); /* allocate memory */
 		val[vlen]=0;
 		cdb_read(&c, val, vlen, vpos); /* read the value into buffer */
+		ZVAL_STRINGL(return_value, val, vlen,0);
 	}
-	ZVAL_STRINGL(return_value, val, vlen,0);
-	//ZVAL_STRINGL(return_value, addr, MMAP_SIZE,1);
 }
 
 
