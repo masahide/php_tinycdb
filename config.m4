@@ -13,9 +13,14 @@ dnl [  --with-php_tinycdb             Include php_tinycdb support])
 
 dnl Otherwise use enable:
 
-dnl PHP_ARG_ENABLE(php_tinycdb, whether to enable php_tinycdb support,
-dnl Make sure that the comment is aligned:
-dnl [  --enable-php_tinycdb           Enable php_tinycdb support])
+PHP_ARG_ENABLE(php_tinycdb, whether to enable php_tinycdb support,
+Make sure that the comment is aligned:
+[  --enable-php_tinycdb           Enable php_tinycdb support])
+
+PHP_TINYCDB_FILES="php_tinycdb.c tinycdb/cdb_init.c tinycdb/cdb_find.c tinycdb/cdb_findnext.c \
+  tinycdb/cdb_seq.c tinycdb/cdb_seek.c \
+  tinycdb/cdb_unpack.c \
+  tinycdb/cdb_make_add.c tinycdb/cdb_make_put.c tinycdb/cdb_make.c tinycdb/cdb_hash.c"
 
 if test "$PHP_PHP_TINYCDB" != "no"; then
   dnl Write more examples of tests here...
@@ -57,7 +62,8 @@ if test "$PHP_PHP_TINYCDB" != "no"; then
   dnl   -L$PHP_TINYCDB_DIR/$PHP_LIBDIR -lm
   dnl ])
   dnl
-  dnl PHP_SUBST(PHP_TINYCDB_SHARED_LIBADD)
+  PHP_SUBST(PHP_TINYCDB_SHARED_LIBADD)
 
-  PHP_NEW_EXTENSION(php_tinycdb, php_tinycdb.c, $ext_shared)
+  PHP_NEW_EXTENSION(php_tinycdb, ${PHP_TINYCDB_FILES}, $ext_shared)
+  PHP_ADD_BUILD_DIR([$ext_builddir/tinycdb])
 fi
