@@ -11,52 +11,37 @@
 #include "php_php_tinycdb.h"
 #include "tinycdb/cdb.h"
 
-/* If you declare any globals in php_php_tinycdb.h uncomment this:
 ZEND_DECLARE_MODULE_GLOBALS(php_tinycdb)
-*/
+
+#define CDBNAME_MAX_LEN  	(1 << 8)
+
+typedef struct { 
+	char cdbname[CDBNAME_MAX_LEN];
+	struct cdb data;
+} tinycdb_storage;
 
 /* True global resources - no need for thread safety here */
 static int le_php_tinycdb;
-static struct cdb c;
+static tinycdb_storage shm_storage;
 
 /* {{{ PHP_INI
  */
-/* Remove comments and fill if you need to have entries in php.ini
 PHP_INI_BEGIN()
-    STD_PHP_INI_ENTRY("php_tinycdb.global_value",      "42", PHP_INI_ALL, OnUpdateLong, global_value, zend_php_tinycdb_globals, php_tinycdb_globals)
-    STD_PHP_INI_ENTRY("php_tinycdb.global_string", "foobar", PHP_INI_ALL, OnUpdateString, global_string, zend_php_tinycdb_globals, php_tinycdb_globals)
+    //STD_PHP_INI_ENTRY("php_tinycdb.global_value",        "42", PHP_INI_ALL, OnUpdateLong,   global_value, zend_php_tinycdb_globals, php_tinycdb_globals)
+    //STD_PHP_INI_ENTRY("php_tinycdb.global_string",   "foobar", PHP_INI_ALL, OnUpdateString, global_string, zend_php_tinycdb_globals, php_tinycdb_globals)
+    STD_PHP_INI_ENTRY("php_tinycdb.init_dbname", "sample.cdb", PHP_INI_ALL, OnUpdateString, init_dbname, zend_php_tinycdb_globals, php_tinycdb_globals)
 PHP_INI_END()
-*/
 /* }}} */
 
 /* Remove the following function when you have successfully modified config.m4
    so that your module can be compiled into PHP, it exists only for testing
    purposes. */
 
+
 /* Every user-visible function in PHP should document itself in the source */
-/* {{{ proto string confirm_php_tinycdb_compiled(string arg)
+/* {{{ proto string cdb_get(string arg)
    Return a string to confirm that the module is compiled in */
-PHP_FUNCTION(confirm_php_tinycdb_compiled)
-{
-	char *arg = NULL;
-	int arg_len, len;
-	char *strg;
-
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &arg, &arg_len) == FAILURE) {
-		return;
-	}
-
-	len = spprintf(&strg, 0, "Congratulations! You have successfully modified ext/%.78s/config.m4. Module %.78s is now compiled into PHP.", "php_tinycdb", arg);
-	RETURN_STRINGL(strg, len, 0);
-}
-/* }}} */
-/* The previous line is meant for vim and emacs, so it can correctly fold and 
-   unfold functions in source code. See the corresponding marks just before 
-   function definition, where the functions purpose is also documented. Please 
-   follow this convention for the convenience of others editing your code.
-*/
-
-PHP_FUNCTION(get_mmap)
+PHP_FUNCTION(cdb_get)
 {
 	char *key = NULL;
 	int key_len, len;
@@ -66,38 +51,36 @@ PHP_FUNCTION(get_mmap)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &key, &key_len) == FAILURE) {
 		return;
 	}
-	if (cdb_find(&c, key, key_len) > 0) { /* if search successeful */
-		vpos = cdb_datapos(&c); /* position of data in a file */
-		vlen = cdb_datalen(&c); /* length of data */
+	if (cdb_find(&shm_storage.data, key, key_len) > 0) { /* if search successeful */
+		vpos = cdb_datapos(&shm_storage.data); /* position of data in a file */
+		vlen = cdb_datalen(&shm_storage.data); /* length of data */
 		val = emalloc(vlen+1); /* allocate memory */
 		val[vlen]=0;
-		cdb_read(&c, val, vlen, vpos); /* read the value into buffer */
+		cdb_read(&shm_storage.data, val, vlen, vpos); /* read the value into buffer */
 		ZVAL_STRINGL(return_value, val, vlen,0);
 	}
 }
+/* }}} */
 
 
 /* {{{ php_php_tinycdb_init_globals
  */
-/* Uncomment this function if you have INI entries
 static void php_php_tinycdb_init_globals(zend_php_tinycdb_globals *php_tinycdb_globals)
 {
-	php_tinycdb_globals->global_value = 0;
-	php_tinycdb_globals->global_string = NULL;
+	//php_tinycdb_globals->global_value = 0;
+	//php_tinycdb_globals->global_string = NULL;
+	php_tinycdb_globals->init_dbname = "sample.cdb";
 }
-*/
 /* }}} */
 
 /* {{{ PHP_MINIT_FUNCTION
  */
 PHP_MINIT_FUNCTION(php_tinycdb)
 {
-	/* If you have INI entries, uncomment these lines 
 	REGISTER_INI_ENTRIES();
-	*/
 	int	fd;
-	fd = shm_open("sample.cdb", O_RDWR, 0666);
-	if (fd < 0 || cdb_init(&c, fd) != 0) {
+	fd = shm_open(PHP_TINYCDB_G(init_dbname), O_RDWR, 0666);
+	if (fd < 0 || cdb_init(&shm_storage.data, fd) != 0) {
 		return FAILURE; 
 	}
 
@@ -153,8 +136,7 @@ PHP_MINFO_FUNCTION(php_tinycdb)
  * Every user visible function must have an entry in php_tinycdb_functions[].
  */
 const zend_function_entry php_tinycdb_functions[] = {
-	PHP_FE(confirm_php_tinycdb_compiled,	NULL)		/* For testing, remove later. */
-	PHP_FE(get_mmap,	NULL)		/* For testing */
+	PHP_FE(cdb_get,	NULL)		/* For testing */
 	PHP_FE_END	/* Must be the last line in php_tinycdb_functions[] */
 };
 /* }}} */

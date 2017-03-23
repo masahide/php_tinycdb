@@ -1,6 +1,6 @@
 <?php
 
-$str = get_mmap("one");
+$str = cdb_get("one");
 echo "one = $str\n";
-$str = get_mmap("two");
+$str = cdb_get("two");
 echo "two = $str\n";
