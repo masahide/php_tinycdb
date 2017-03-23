@@ -36,7 +36,8 @@ Development guide
 
 # create sample.cdb
  ./tinycdb/cdb -c -m sample.cdb sample.tsv
- cp sample.cdb /dev/shm/sample.cdb
+ ./tinycdb/cdb -c -m sample2.cdb sample2.tsv
+ cp sample.cdb sample2.cdb /dev/shm/
 
 # run test.php
  ${HOME}/php-ext/bin/php -d extension=modules/php_tinycdb.so -f test.php
