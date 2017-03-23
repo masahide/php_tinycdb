@@ -2,6 +2,8 @@
 #ifndef PHP_PHP_TINYCDB_H
 #define PHP_PHP_TINYCDB_H
 
+#include "tinycdb/cdb.h"
+
 extern zend_module_entry php_tinycdb_module_entry;
 #define phpext_php_tinycdb_ptr &php_tinycdb_module_entry
 
@@ -19,15 +21,13 @@ extern zend_module_entry php_tinycdb_module_entry;
 #include "TSRM.h"
 #endif
 
-/* 
-  	Declare any global variables you may need between the BEGIN
-	and END macros here:     
+#define CDBNAME_MAX_LEN  	(1 << 8)
 
 ZEND_BEGIN_MODULE_GLOBALS(php_tinycdb)
-	long  global_value;
-	char *global_string;
+	char cdb_name[CDBNAME_MAX_LEN];
+	int fd;
+	struct cdb data;
 ZEND_END_MODULE_GLOBALS(php_tinycdb)
-*/
 
 /* In every utility function you add that needs to use variables 
    in php_php_tinycdb_globals, call TSRMLS_FETCH(); after declaring other 
