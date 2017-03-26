@@ -17,10 +17,8 @@ PHP_ARG_ENABLE(tinycdb, whether to enable tinycdb support,
 Make sure that the comment is aligned:
 [  --enable-tinycdb           Enable tinycdb support])
 
-TINYCDB_FILES="tinycdb.c vendor/tinycdb/cdb_init.c vendor/tinycdb/cdb_find.c vendor/tinycdb/cdb_findnext.c \
-  vendor/tinycdb/cdb_seq.c vendor/tinycdb/cdb_seek.c \
-  vendor/tinycdb/cdb_unpack.c \
-  vendor/tinycdb/cdb_make_add.c vendor/tinycdb/cdb_make_put.c vendor/tinycdb/cdb_make.c vendor/tinycdb/cdb_hash.c"
+TINYCDB_FILES="tinycdb.c vendor/tinycdb/cdb_init.c vendor/tinycdb/cdb_find.c \
+  vendor/tinycdb/cdb_unpack.c vendor/tinycdb/cdb_hash.c"
 
 if test "$PHP_TINYCDB" != "no"; then
   dnl Write more examples of tests here...
