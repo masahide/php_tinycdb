@@ -1,10 +1,10 @@
 <?php
 $br = (php_sapi_name() == "cli")? "":"<br>";
 
-if(!extension_loaded('php_tinycdb')) {
-	dl('php_tinycdb.' . PHP_SHLIB_SUFFIX);
+if(!extension_loaded('tinycdb')) {
+	dl('tinycdb.' . PHP_SHLIB_SUFFIX);
 }
-$module = 'php_tinycdb';
+$module = 'tinycdb';
 $functions = get_extension_funcs($module);
 echo "Functions available in the test extension:$br\n";
 foreach($functions as $func) {

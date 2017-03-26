@@ -34,6 +34,6 @@ tests/*/*.php
 tests/*/*.exp
 tests/*/*.log
 tests/*/*.sh
-tinycdb/cdb
-tinycdb/*.o
-tinycdb/*.a
+vendor/tinycdb/cdb
+vendor/tinycdb/*.o
+vendor/tinycdb/*.a

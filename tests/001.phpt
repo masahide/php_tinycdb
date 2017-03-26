@@ -1,10 +1,10 @@
 --TEST--
-Check for php_tinycdb presence
+Check for tinycdb presence
 --SKIPIF--
-<?php if (!extension_loaded("php_tinycdb")) print "skip"; ?>
+<?php if (!extension_loaded("tinycdb")) print "skip"; ?>
 --FILE--
 <?php 
-echo "php_tinycdb extension is available";
+echo "tinycdb extension is available";
 /*
 	you can add regression tests for your extension here
 
@@ -18,4 +18,4 @@ echo "php_tinycdb extension is available";
 */
 ?>
 --EXPECT--
-php_tinycdb extension is available
+tinycdb extension is available
