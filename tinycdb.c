@@ -165,6 +165,7 @@ PHP_MINFO_FUNCTION(tinycdb)
 {
 	php_info_print_table_start();
 	php_info_print_table_header(2, "tinycdb support", "enabled");
+	php_info_print_table_row(2, "Version", PHP_TINYCDB_VERSION);
 	php_info_print_table_end();
 
 	DISPLAY_INI_ENTRIES();
