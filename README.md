@@ -23,8 +23,8 @@ Development guide
 
 ```
  ${HOME}/php-ext/bin/phpize
- ./configure --help | grep php_tinycdb
- ./configure --enable-php_tinycdb --enable-debug --with-php-config=${HOME}/php-ext/bin/php-config
+ ./configure --help | grep tinycdb
+ ./configure --enable-tinycdb --with-php-config=${HOME}/php-ext/bin/php-config
  make
 ```
 
@@ -32,13 +32,13 @@ Development guide
 
 ```
 # create cdb command
- cd tinycdb; make; cd -
+ cd vendor/tinycdb; make; cd -
 
 # create sample.cdb
- ./tinycdb/cdb -c -m sample.cdb sample.tsv
- ./tinycdb/cdb -c -m sample2.cdb sample2.tsv
+ ./vendor/tinycdb/cdb -c -m sample.cdb sample.tsv
+ ./vendor/tinycdb/cdb -c -m sample2.cdb sample2.tsv
  cp sample.cdb sample2.cdb /dev/shm/
 
 # run test.php
- ${HOME}/php-ext/bin/php -d extension=modules/php_tinycdb.so -f test.php
+ ${HOME}/php-ext/bin/php -d extension=modules/tinycdb.so -f test.php
 ```
