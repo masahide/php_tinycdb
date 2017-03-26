@@ -2,12 +2,12 @@
 // vim:ft=javascript
 
 // If your extension references something external, use ARG_WITH
-// ARG_WITH("php_tinycdb", "for php_tinycdb support", "no");
+// ARG_WITH("tinycdb", "for tinycdb support", "no");
 
 // Otherwise, use ARG_ENABLE
-// ARG_ENABLE("php_tinycdb", "enable php_tinycdb support", "no");
+// ARG_ENABLE("tinycdb", "enable tinycdb support", "no");
 
-if (PHP_PHP_TINYCDB != "no") {
-	EXTENSION("php_tinycdb", "php_tinycdb.c");
+if (PHP_TINYCDB != "no") {
+	EXTENSION("tinycdb", "tinycdb.c");
 }
 
